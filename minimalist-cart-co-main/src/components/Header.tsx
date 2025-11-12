@@ -182,12 +182,43 @@ const Header = ({ cartItemsCount = 0 }: HeaderProps) => {
 
             {isAdmin && (
               <NavigationMenuItem>
-                <Link
-                  to="/admin/orders"
-                  className="text-sm font-medium hover:text-primary transition-colors px-4 tracking-wide"
-                >
-                  Quản lý đơn hàng
-                </Link>
+                <NavigationMenuTrigger className="text-sm font-medium">
+                  Quản trị
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid w-[200px] gap-3 p-4">
+                    <li>
+                      <NavigationMenuLink asChild>
+                        <Link
+                          to="/admin/dashboard"
+                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                        >
+                          <div className="text-sm font-medium leading-none">
+                            Dashboard
+                          </div>
+                          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                            Thống kê & báo cáo
+                          </p>
+                        </Link>
+                      </NavigationMenuLink>
+                    </li>
+                    <li>
+                      <NavigationMenuLink asChild>
+                        <Link
+                          to="/admin/orders"
+                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                        >
+                          <div className="text-sm font-medium leading-none">
+                            Quản lý đơn hàng
+                          </div>
+                          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                            Xem & cập nhật đơn hàng
+                          </p>
+                        </Link>
+                      </NavigationMenuLink>
+                    </li>
+                  </ul>
+                </NavigationMenuContent>
               </NavigationMenuItem>
             )}
           </NavigationMenuList>

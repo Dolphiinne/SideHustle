@@ -1,8 +1,14 @@
 {
   "dependencies": {
     "@types/styled-components": "^5.1.35",
+    "jspdf": "^3.0.3",
+    "jspdf-autotable": "^5.0.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "styled-components": "^6.1.19"
+    "styled-components": "^6.1.19",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@types/xlsx": "^0.0.35"
   }
 }

@@ -86,21 +86,31 @@ const Index = () => {
 
       <main>
         {/* Hero Section */}
-        <section className="relative h-[70vh] flex items-center justify-center bg-muted">
-          <div className="container mx-auto px-4 text-center">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tight">
+        <section className="relative h-[70vh] flex items-center justify-center bg-muted overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 animate-fade-in" />
+          <div className="container mx-auto px-4 text-center relative z-10">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tight animate-fade-in">
               Tối Ưu Từng Inch,
               <br />
               Nâng Cấp Hiển Thị
             </h1>
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            <p
+              className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto animate-fade-in"
+              style={{ animationDelay: "0.2s" }}
+            >
               Chuyên cung cấp các loại màn hình di động, nhỏ gọn nhẹ cho chuyển
               công tác của bạn
             </p>
-            <Button size="lg" onClick={() => navigate("/products")}>
-              Mua Ngay
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+            <div className="animate-fade-in" style={{ animationDelay: "0.4s" }}>
+              <Button
+                size="lg"
+                onClick={() => navigate("/products")}
+                className="hover-scale"
+              >
+                Mua Ngay
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </section>
 
@@ -115,10 +125,11 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredProducts.map((product) => (
+            {featuredProducts.map((product, index) => (
               <Card
                 key={product.id}
-                className="overflow-hidden group cursor-pointer"
+                className="overflow-hidden group cursor-pointer animate-fade-in hover-scale"
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div
                   onClick={() => navigate(`/product/${product.id}`)}
@@ -127,7 +138,7 @@ const Index = () => {
                   <img
                     src={product.image_url}
                     alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                 </div>
                 <CardContent className="pt-4">
@@ -164,15 +175,24 @@ const Index = () => {
         <section className="bg-muted py-16">
           <div className="container mx-auto px-4">
             <div className="grid md:grid-cols-3 gap-8 text-center">
-              <div>
+              <div
+                className="animate-fade-in hover-scale p-6 rounded-lg transition-all duration-300"
+                style={{ animationDelay: "0.1s" }}
+              >
                 <h3 className="font-bold text-xl mb-2">Vận Chuyển Toàn Quốc</h3>
                 <p className="text-muted-foreground">Cho tất cả đơn hàng</p>
               </div>
-              <div>
+              <div
+                className="animate-fade-in hover-scale p-6 rounded-lg transition-all duration-300"
+                style={{ animationDelay: "0.2s" }}
+              >
                 <h3 className="font-bold text-xl mb-2">Thanh Toán An Toàn</h3>
                 <p className="text-muted-foreground">100% bảo mật giao dịch</p>
               </div>
-              <div>
+              <div
+                className="animate-fade-in hover-scale p-6 rounded-lg transition-all duration-300"
+                style={{ animationDelay: "0.3s" }}
+              >
                 <h3 className="font-bold text-xl mb-2">Sản Phẩm Chất Lượng</h3>
                 <p className="text-muted-foreground">Có bảo hành</p>
               </div>

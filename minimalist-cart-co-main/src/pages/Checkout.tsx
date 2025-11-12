@@ -38,8 +38,10 @@ const Checkout = () => {
   }, []);
 
   const checkAuthAndFetchCart = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
     if (!user) {
       toast.error("Vui lòng đăng nhập để thanh toán");
       navigate("/auth");
@@ -51,12 +53,15 @@ const Checkout = () => {
 
   const fetchCart = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return;
 
       const { data, error } = await supabase
         .from("cart_items")
-        .select(`
+        .select(
+          `
           id,
           quantity,
           product_id,
@@ -65,17 +70,18 @@ const Checkout = () => {
             name,
             price
           )
-        `)
+        `
+        )
         .eq("user_id", user.id);
 
       if (error) throw error;
-      
+
       if (!data || data.length === 0) {
         toast.error("Giỏ hàng của bạn đang trống");
         navigate("/cart");
         return;
       }
-      
+
       setCartItems(data);
     } catch (error: any) {
       toast.error("Không thể tải giỏ hàng");
@@ -86,7 +92,7 @@ const Checkout = () => {
 
   const calculateTotal = () => {
     return cartItems.reduce((sum, item) => {
-      return sum + (item.products.price * item.quantity);
+      return sum + item.products.price * item.quantity;
     }, 0);
   };
 
@@ -99,7 +105,9 @@ const Checkout = () => {
     setProcessing(true);
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) throw new Error("Chưa xác thực");
 
       const total = calculateTotal();
@@ -123,7 +131,7 @@ const Checkout = () => {
 
       if (orderError) throw orderError;
 
-      const orderItems = cartItems.map(item => ({
+      const orderItems = cartItems.map((item) => ({
         order_id: order.id,
         product_id: item.product_id,
         quantity: item.quantity,
@@ -142,6 +150,24 @@ const Checkout = () => {
         .eq("user_id", user.id);
 
       if (clearError) throw clearError;
+      // Send email notification to admins
+      try {
+        await supabase.functions.invoke("send-order-notification", {
+          body: {
+            orderId: order.id,
+            customerName: customerName,
+            total: total,
+            items: cartItems.map((item) => ({
+              name: item.products.name,
+              quantity: item.quantity,
+              price: item.products.price,
+            })),
+          },
+        });
+      } catch (emailError) {
+        console.error("Failed to send email notification:", emailError);
+        // Don't fail the order if email fails
+      }
 
       toast.success("Đặt hàng thành công!");
       navigate("/");
@@ -196,7 +222,7 @@ const Checkout = () => {
                     />
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="address">Địa chỉ *</Label>
                   <Input
@@ -256,7 +282,10 @@ const Checkout = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 {cartItems.map((item) => (
-                  <div key={item.id} className="flex justify-between py-2 border-b">
+                  <div
+                    key={item.id}
+                    className="flex justify-between py-2 border-b"
+                  >
                     <div>
                       <p className="font-medium">{item.products.name}</p>
                       <p className="text-sm text-muted-foreground">
@@ -264,7 +293,10 @@ const Checkout = () => {
                       </p>
                     </div>
                     <p className="font-bold">
-                      {(item.products.price * item.quantity).toLocaleString('vi-VN')}đ
+                      {(item.products.price * item.quantity).toLocaleString(
+                        "vi-VN"
+                      )}
+                      đ
                     </p>
                   </div>
                 ))}
@@ -276,33 +308,36 @@ const Checkout = () => {
             <Card className="sticky top-20">
               <CardContent className="p-6 space-y-4">
                 <h2 className="text-xl font-bold">Thanh Toán</h2>
-                
+
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Tạm tính</span>
-                    <span>{calculateTotal().toLocaleString('vi-VN')}đ</span>
+                    <span>{calculateTotal().toLocaleString("vi-VN")}đ</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Phí vận chuyển</span>
+                    <span className="text-muted-foreground">
+                      Phí vận chuyển
+                    </span>
                     <span>Miễn phí</span>
                   </div>
                   <div className="border-t pt-2 flex justify-between font-bold text-lg">
                     <span>Tổng cộng</span>
-                    <span>{calculateTotal().toLocaleString('vi-VN')}đ</span>
+                    <span>{calculateTotal().toLocaleString("vi-VN")}đ</span>
                   </div>
                 </div>
 
-                <Button 
-                  onClick={handlePlaceOrder} 
-                  className="w-full" 
+                <Button
+                  onClick={handlePlaceOrder}
+                  className="w-full"
                   size="lg"
                   disabled={processing}
                 >
                   {processing ? "Đang xử lý..." : "Đặt Hàng"}
                 </Button>
-                
+
                 <p className="text-xs text-center text-muted-foreground">
-                  Bằng cách đặt hàng, bạn đồng ý với điều khoản và điều kiện của chúng tôi
+                  Bằng cách đặt hàng, bạn đồng ý với điều khoản và điều kiện của
+                  chúng tôi
                 </p>
               </CardContent>
             </Card>
